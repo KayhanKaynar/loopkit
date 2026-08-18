@@ -2,10 +2,10 @@
 
 ```
    ▄█        ▄██████▄   ▄██████▄     ▄███████▄  ▄█   ▄█▄  ▄█      ███
-  ███       ███    ███ ███    ███   ███    ███ ███ ▄███▀ ███  ▀█████████▄
+  ███       ███    ███ ███    ███   ███    ███ ███ ▄███▀ ███  ▀████████▄
   ███       ███    ███ ███    ███   ███    ███ ███▐██▀   ███▌    ▀███▀▀██
   ███       ███    ███ ███    ███   ███    ███ ▄█████▀   ███▌     ███   ▀
-  ███       ███    ███ ███    ███ ▀█████████▀ ▀▀█████▄   ███▌     ███
+  ███       ███    ███ ███    ███ ▀████████▀ ▀▀█████▄   ███▌     ███
   ███       ███    ███ ███    ███   ███         ███▐██▄  ███      ███
   ███▌    ▄ ███    ███ ███    ███   ███         ███ ▀███▄███      ███
   █████▄▄██  ▀██████▀   ▀██████▀   ▄████▀       ███   ▀█▀ █▀     ▄████▀
@@ -60,11 +60,13 @@ Installs only that skill into `./.claude/skills/`. Pass `--force` to overwrite a
 Straight from my own `.claude/` directory. This is the loadout I actually reach for — not a methodology, not a lifecycle, not a framework.
 
 **loopkit is:**
+
 - A working harness: settings, hooks, verifier subagent, loop runner. Files on disk, no runtime.
 - 49 small skills that load only when relevant, so the agent specializes instead of guessing.
 - Cross-agent. Every skill is a plain markdown doc with a YAML header — nothing Claude-specific inside the skill body.
 
 **loopkit isn't:**
+
 - A new methodology to learn. No BMAD, no Prime Radiant, no 6-phase lifecycle. If a skill doesn't help the loop advance, it isn't here.
 - A wrapper CLI. No daemon, no server, no runtime state. `run.sh` is 8 lines.
 - A vendor lock-in. Fork it, gut it, keep the three skills you like. MIT.
@@ -108,27 +110,35 @@ your-project/
 Every file below is opinionated on purpose. Change what doesn't fit; the loop still works.
 
 ### `.claude/CLAUDE.md` — standing context
+
 60 lines, no more. The tax on every turn. Stack, layout, commands, conventions, the three things the agent must never do. Prune weekly.
 
 ### `.claude/settings.json` — permissions + hooks
+
 Allowlist for read-only Bash and Read; deny-list for `rm -rf` and force-push. `PostToolUse` hook runs Prettier on every Edit/Write so the diff stays reviewable.
 
 ### `.claude/agents/verifier.md` — the adversarial subagent
+
 Runs on Haiku. Reads the diff assuming it's broken. Checks the 11 "fake done" shortcuts (see `skills/adversarial-verify`). Returns JSON. Does not propose fixes, does not run code, does not be polite. This is the load-bearing piece.
 
 ### `.claude/hooks/` — session-start bootstrap
+
 Fires when the agent opens the project. Reminds it of the loop shape and points at `CLAUDE.md`. Zero runtime cost.
 
 ### `.claude/skills/` — the 49-skill library
+
 Each skill: YAML frontmatter with `name` + `description`, a short body, no runtime dependencies. Loads only when its trigger fires. See the full list below.
 
 ### `.mcp.json` — MCP wiring
+
 GitHub + Context7 by default. Add your own; the harness doesn't care.
 
 ### `MEMORY.md` — cross-session index
+
 Preferences, decisions, feedback you keep re-applying. Prune every session or it becomes rot.
 
 ### `run.sh` — the loop runner
+
 8 lines. Reads `PROMPT.md` + `IMPLEMENTATION_PLAN.md`, does one step, verifies, loops until `STATUS: done`. Fresh context each turn; state lives on disk.
 
 ---
@@ -138,68 +148,79 @@ Preferences, decisions, feedback you keep re-applying. Prune every session or it
 **49 skills across 10 tracks.** Each one: name → what it does → when it fires.
 
 ### agent/llm — how the agent behaves
-- **context-budget** — trim the working set → *before large reads or long sessions*
-- **spec-first** — write the contract before code → *any new feature or endpoint*
-- **tool-restraint** — pick the smallest tool that fits → *avoids Bash-for-everything drift*
-- **subagent-fanout** — parallelize independent probes → *research/audit tasks*
+
+- **context-budget** — trim the working set → _before large reads or long sessions_
+- **spec-first** — write the contract before code → _any new feature or endpoint_
+- **tool-restraint** — pick the smallest tool that fits → _avoids Bash-for-everything drift_
+- **subagent-fanout** — parallelize independent probes → _research/audit tasks_
 
 ### loop & harness — long-running, multi-session, multi-agent discipline
-- **planner-spec-expand** — 1–4 sentence brief → full ambitious spec with design language and ordered feature list → *starting a fresh project or major feature*
-- **sprint-contract** — negotiate "done" as script-decidable predicates before code → *entering an implementation sprint with an evaluator in the loop*
-- **feature-list-json** — enumerate every feature as strict JSON, `passes:false`, editable-passes-only → *multi-session builds*
-- **init-script-contract** — idempotent `init.sh` + `test.sh`/`stop.sh`/`reset.sh` siblings, under 120s → *setting up a repo for multi-session agent work*
-- **progress-reading-protocol** — fixed 6-step session-open ritual (pwd → progress → git log → feature-count → init → smoke-test) → *any session bootstrapping into an existing project*
-- **self-eval-bias** — interrupt confidently-praise-my-own-work drift → *when an agent is about to declare success on its own output*
-- **evaluator-calibration** — few-shot the reviewer persona with rubric anchors to keep skepticism from drifting lenient → *before a long autonomous run with a reviewer agent*
-- **harness-stripping** — remove one harness component at a time and measure impact, on every model release → *when a new model lands, before piling on more scaffolding*
+
+- **planner-spec-expand** — 1–4 sentence brief → full ambitious spec with design language and ordered feature list → _starting a fresh project or major feature_
+- **sprint-contract** — negotiate "done" as script-decidable predicates before code → _entering an implementation sprint with an evaluator in the loop_
+- **feature-list-json** — enumerate every feature as strict JSON, `passes:false`, editable-passes-only → _multi-session builds_
+- **init-script-contract** — idempotent `init.sh` + `test.sh`/`stop.sh`/`reset.sh` siblings, under 120s → _setting up a repo for multi-session agent work_
+- **progress-reading-protocol** — fixed 6-step session-open ritual (pwd → progress → git log → feature-count → init → smoke-test) → _any session bootstrapping into an existing project_
+- **self-eval-bias** — interrupt confidently-praise-my-own-work drift → _when an agent is about to declare success on its own output_
+- **evaluator-calibration** — few-shot the reviewer persona with rubric anchors to keep skepticism from drifting lenient → _before a long autonomous run with a reviewer agent_
+- **harness-stripping** — remove one harness component at a time and measure impact, on every model release → _when a new model lands, before piling on more scaffolding_
 
 ### debug
-- **systematic-debugging** — hypothesis → test → narrow → *any bug you can't one-shot*
-- **read-the-trace** — extract the actual failure from noise → *stack traces, CI logs*
-- **bisect-regression** — git-bisect discipline → *"it worked yesterday"*
+
+- **systematic-debugging** — hypothesis → test → narrow → _any bug you can't one-shot_
+- **read-the-trace** — extract the actual failure from noise → _stack traces, CI logs_
+- **bisect-regression** — git-bisect discipline → _"it worked yesterday"_
 
 ### security
-- **owasp-review** — top-10 pass on a diff → *before merging user-facing changes*
-- **authz-check** — verify every route enforces its policy → *auth surface changes*
-- **input-validation** — validate at the edge → *any handler taking external data*
-- **secret-scan** — catch keys before commit → *pre-push, PR review*
-- **dependency-audit** — CVE + license triage → *lockfile changes*
+
+- **owasp-review** — top-10 pass on a diff → _before merging user-facing changes_
+- **authz-check** — verify every route enforces its policy → _auth surface changes_
+- **input-validation** — validate at the edge → _any handler taking external data_
+- **secret-scan** — catch keys before commit → _pre-push, PR review_
+- **dependency-audit** — CVE + license triage → _lockfile changes_
 
 ### frontend
-- **design-system** — reuse tokens, don't invent them → *any UI change*
-- **a11y-pass** — semantics + keyboard + contrast → *before shipping a screen*
-- **loading-empty-error-states** — all four states, not just happy path → *any async view*
+
+- **design-system** — reuse tokens, don't invent them → _any UI change_
+- **a11y-pass** — semantics + keyboard + contrast → _before shipping a screen_
+- **loading-empty-error-states** — all four states, not just happy path → _any async view_
 
 ### testing
-- **write-failing-test-first** — red before green → *behavior changes, bug fixes*
-- **flaky-hunter** — reproduce, isolate, quarantine → *intermittent CI reds*
-- **coverage-gaps** — find behavior with no test → *before declaring "done"*
-- **contract-test** — pin the API shape → *service boundaries*
+
+- **write-failing-test-first** — red before green → _behavior changes, bug fixes_
+- **flaky-hunter** — reproduce, isolate, quarantine → _intermittent CI reds_
+- **coverage-gaps** — find behavior with no test → _before declaring "done"_
+- **contract-test** — pin the API shape → _service boundaries_
 
 ### refactor
-- **kill-dead-code** — prove unreachable, then delete → *cleanup passes*
-- **simplify** — collapse indirection you don't need → *code review, "too clever"*
-- **reduce-nesting** — early returns, guard clauses → *reading fatigue*
+
+- **kill-dead-code** — prove unreachable, then delete → _cleanup passes_
+- **simplify** — collapse indirection you don't need → _code review, "too clever"_
+- **reduce-nesting** — early returns, guard clauses → _reading fatigue_
 
 ### docs
-- **changelog-from-diff** — human-readable release notes → *tagging a version*
-- **decision-record** — ADR for the "why" → *architectural choices*
-- **readme-audit** — check onboarding path from cold → *before public share*
+
+- **changelog-from-diff** — human-readable release notes → _tagging a version_
+- **decision-record** — ADR for the "why" → _architectural choices_
+- **readme-audit** — check onboarding path from cold → _before public share_
 
 ### data
-- **sql-review** — indexes, N+1, plan → *any non-trivial query*
-- **migration-writer** — reversible, zero-downtime → *schema changes*
-- **schema-diff** — compare shapes, catch drift → *env sync*
+
+- **sql-review** — indexes, N+1, plan → _any non-trivial query_
+- **migration-writer** — reversible, zero-downtime → _schema changes_
+- **schema-diff** — compare shapes, catch drift → _env sync_
 
 ### git/ops
-- **clean-commits** — atomic, message-first → *before PR*
-- **pr-from-diff** — summary the reviewer will actually read → *opening a PR*
-- **rebase-safely** — no lost commits → *history cleanup*
-- **revert-surgical** — undo only the offending change → *bad merges*
+
+- **clean-commits** — atomic, message-first → _before PR_
+- **pr-from-diff** — summary the reviewer will actually read → _opening a PR_
+- **rebase-safely** — no lost commits → _history cleanup_
+- **revert-surgical** — undo only the offending change → _bad merges_
 
 ### review
-- **adversarial-verify** — the 11 shortcuts agents take to fake "done" → *before flipping any task to complete*
-- **verification-before-completion** — run the exact command, read the output, then claim → *before any "done" claim*
+
+- **adversarial-verify** — the 11 shortcuts agents take to fake "done" → _before flipping any task to complete_
+- **verification-before-completion** — run the exact command, read the output, then claim → _before any "done" claim_
 
 ---
 
@@ -239,12 +260,12 @@ cp -r loopkit/.claude your-project/
 
 **Options for the curl installer:**
 
-| Env var | Effect |
-|---|---|
-| `FORCE=1` | Overwrite existing files instead of skipping |
-| `BACKUP=1` | Snapshot existing `.claude/` to `.claude.bak-<timestamp>/` before writing |
-| `DEST=/path` | Install into a specific directory instead of `$PWD` |
-| `LOOPKIT_REF=<branch>` | Install from a specific branch/tag (default `main`) |
+| Env var                | Effect                                                                    |
+| ---------------------- | ------------------------------------------------------------------------- |
+| `FORCE=1`              | Overwrite existing files instead of skipping                              |
+| `BACKUP=1`             | Snapshot existing `.claude/` to `.claude.bak-<timestamp>/` before writing |
+| `DEST=/path`           | Install into a specific directory instead of `$PWD`                       |
+| `LOOPKIT_REF=<branch>` | Install from a specific branch/tag (default `main`)                       |
 
 The installer prints every write, verifies the `claude` CLI is on your PATH afterward, and exits non-zero if anything critical failed.
 
@@ -270,14 +291,14 @@ The bundled harness (`settings.json`, hooks, verifier subagent) is Claude-Code-s
 
 ## vs other skill packs
 
-|  | loopkit | [obra/superpowers](https://github.com/obra/superpowers) | [mattpocock/skills](https://github.com/mattpocock/skills) | [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) |
-|---|---|---|---|---|
-| Ships a harness (settings, verifier, loop runner) | **yes** | no | no | no |
-| Skills load only on trigger (YAML frontmatter) | yes | yes | yes | yes |
-| Methodology commitment required | **none** | Prime Radiant | GSD-adjacent | 6-phase lifecycle |
-| Skill count | 49 | ~40 | ~19 | ~24 |
-| Compatible with non-Claude agents | yes | Claude-first | multi | multi |
-| Install size | tiny | medium | medium | medium |
+|                                                   | loopkit  | [obra/superpowers](https://github.com/obra/superpowers) | [mattpocock/skills](https://github.com/mattpocock/skills) | [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) |
+| ------------------------------------------------- | -------- | ------------------------------------------------------- | --------------------------------------------------------- | --------------------------------------------------------------------- |
+| Ships a harness (settings, verifier, loop runner) | **yes**  | no                                                      | no                                                        | no                                                                    |
+| Skills load only on trigger (YAML frontmatter)    | yes      | yes                                                     | yes                                                       | yes                                                                   |
+| Methodology commitment required                   | **none** | Prime Radiant                                           | GSD-adjacent                                              | 6-phase lifecycle                                                     |
+| Skill count                                       | 49       | ~40                                                     | ~19                                                       | ~24                                                                   |
+| Compatible with non-Claude agents                 | yes      | Claude-first                                            | multi                                                     | multi                                                                 |
+| Install size                                      | tiny     | medium                                                  | medium                                                    | medium                                                                |
 
 Full breakdown: [docs/vs-others.md](./docs/vs-others.md).
 
@@ -321,4 +342,4 @@ Full contribution guide: [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## License
 
-MIT. Built to be forked. Follow the build: [@archive on X](https://x.com/archive) · article: *Loop and Harness engineering*.
+MIT. Built to be forked. Follow the build: [@archive on X](https://x.com/archive) · article: _Loop and Harness engineering_.
