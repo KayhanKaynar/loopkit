@@ -63,11 +63,11 @@ Every entry starts with `passes: false`. Coding agents are only permitted to fli
 
 The choice of JSON over Markdown is not aesthetic. We A/B tested it in Q1 2026 (`go/feature-list-spec`, eval set `feature-edit-fidelity-v2`):
 
-| Format | Sessions | Spurious description edits | Spurious test removals | Premature `passes: true` |
-|---|---|---|---|---|
-| Markdown bullet list | 240 | 31 (12.9%) | 18 (7.5%) | 44 (18.3%) |
-| YAML list | 240 | 19 (7.9%) | 11 (4.6%) | 37 (15.4%) |
-| JSON (current) | 240 | 4 (1.7%) | 2 (0.8%) | 22 (9.2%) |
+| Format               | Sessions | Spurious description edits | Spurious test removals | Premature `passes: true` |
+| -------------------- | -------- | -------------------------- | ---------------------- | ------------------------ |
+| Markdown bullet list | 240      | 31 (12.9%)                 | 18 (7.5%)              | 44 (18.3%)               |
+| YAML list            | 240      | 19 (7.9%)                  | 11 (4.6%)              | 37 (15.4%)               |
+| JSON (current)       | 240      | 4 (1.7%)                   | 2 (0.8%)               | 22 (9.2%)                |
 
 The hypothesis is that JSON's syntactic strictness makes the model treat the file as data rather than prose. The model edits prose freely. It edits data carefully. We have not been able to falsify this hypothesis cheaply, but the gap is large enough that we have stopped trying.
 
@@ -291,10 +291,10 @@ Three internal evals are worth surfacing. All numbers are from `go/loop-eval-ben
 
 **Eval 1 — initializer vs. no initializer.** Same coding-agent prompt, same model (Opus 4.5 at the time), same eval set (`clone-claude-ai-v3`, 60 runs per arm). Measured: features completed per 4-hour budget.
 
-| Configuration | Mean features completed | Median | p10 | p90 |
-|---|---|---|---|---|
-| No initializer (coding agent only, given the prompt directly) | 11.4 | 9 | 2 | 24 |
-| Initializer + coding agent | 34.7 | 33 | 19 | 51 |
+| Configuration                                                  | Mean features completed | Median | p10 | p90 |
+| -------------------------------------------------------------- | ----------------------- | ------ | --- | --- |
+| No initializer (coding agent only, given the prompt directly)  | 11.4                    | 9      | 2   | 24  |
+| Initializer + coding agent                                     | 34.7                    | 33     | 19  | 51  |
 
 3x improvement. The gap is largest at the p10 end — the initializer mostly stops catastrophic runs from happening, which matters more than ceiling improvements.
 
@@ -302,10 +302,10 @@ Three internal evals are worth surfacing. All numbers are from `go/loop-eval-ben
 
 **Eval 3 — single-context vs. incremental.** Sonnet 4.5, claude.ai-clone prompt, 4-hour budget. Single-context means one session given the entire budget, with compaction. Incremental means N sessions of up to 30 minutes each.
 
-| Configuration | Features completed | Sessions | Premature-victory rate |
-|---|---|---|---|
-| Single context, 4hr, compaction on | 14.2 (mean) | 1 | 36% |
-| Incremental, 30min cap | 29.8 (mean) | ~9 | 8% |
+| Configuration                      | Features completed | Sessions | Premature-victory rate |
+| ---------------------------------- | ------------------ | -------- | ---------------------- |
+| Single context, 4hr, compaction on | 14.2 (mean)        | 1        | 36%                    |
+| Incremental, 30min cap             | 29.8 (mean)        | ~9       | 8%                     |
 
 Single-context runs fail in a particular way: they ship more code but the code is less coherent, and they hit premature victory at high rates because the agent runs out of context and rationalises the unfinished work as "done." Incremental wins on every metric we care about except wall-clock for the first feature, where the orientation cost penalises it.
 
