@@ -291,10 +291,10 @@ Three internal evals are worth surfacing. All numbers are from `go/loop-eval-ben
 
 **Eval 1 — initializer vs. no initializer.** Same coding-agent prompt, same model (Opus 4.5 at the time), same eval set (`clone-claude-ai-v3`, 60 runs per arm). Measured: features completed per 4-hour budget.
 
-| Configuration                                                  | Mean features completed | Median | p10 | p90 |
-| -------------------------------------------------------------- | ----------------------- | ------ | --- | --- |
-| No initializer (coding agent only, given the prompt directly)  | 11.4                    | 9      | 2   | 24  |
-| Initializer + coding agent                                     | 34.7                    | 33     | 19  | 51  |
+| Configuration                                                 | Mean features completed | Median | p10 | p90 |
+| ------------------------------------------------------------- | ----------------------- | ------ | --- | --- |
+| No initializer (coding agent only, given the prompt directly) | 11.4                    | 9      | 2   | 24  |
+| Initializer + coding agent                                    | 34.7                    | 33     | 19  | 51  |
 
 3x improvement. The gap is largest at the p10 end — the initializer mostly stops catastrophic runs from happening, which matters more than ceiling improvements.
 
