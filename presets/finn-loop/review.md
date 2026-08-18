@@ -12,7 +12,7 @@ The last beat of Finn Loop. It fires `/polish` (loopkit upgrade #3 — reuse / s
 
 1. **Gate.** If `SPEC-APPROVED.md` does not exist, stop and print:
    > No approved spec in this tree. `/review` is the third beat of Finn Loop — run `/spec` then `/build` first.
-   Exit non-zero.
+   > Exit non-zero.
 2. **Polish.** Invoke `/polish` (loopkit upgrade #3). It reviews the current diff for reuse, simplification, efficiency, and altitude cleanups and applies the fixes. Quality only — it is NOT a bug hunt; `/verify` handles that.
    - If `/polish` is not installed in this project (base loopkit only, no upgrade #3), fall back to reading `skills/simplify/SKILL.md` and applying its checklist manually against `git diff HEAD`.
 3. **Verify.** Invoke `/verify` (base loopkit `.claude/commands/verify.md`). Adversarial pass against the polished diff. Non-zero from `/verify` blocks the merge signal.
