@@ -1,6 +1,6 @@
 # Finn Loop preset
 
-An opinionated arrangement of loopkit's core skills for **async, human-gated** shipping. Named after the async-first cadence Finn Hackett has been evangelising: the agent does the *thinking* on its own clock, then blocks on a human ACK before it does the *doing*.
+An opinionated arrangement of loopkit's core skills for **async, human-gated** shipping. Named after the async-first cadence Finn Hackett has been evangelising: the agent does the _thinking_ on its own clock, then blocks on a human ACK before it does the _doing_.
 
 ## The loop
 
@@ -9,13 +9,13 @@ An opinionated arrangement of loopkit's core skills for **async, human-gated** s
   →  /build  →  diff  →  /review  →  rocket emoji on the configured channel  →  merge
 ```
 
-Four beats, and the middle two are gated. `/spec` writes and *stops*. `/build` refuses to run until it sees `SPEC-APPROVED.md`. `/review` runs `/polish` then `/verify` then posts a rocket emoji to your channel; a human sees the rocket, opens the PR, hits merge.
+Four beats, and the middle two are gated. `/spec` writes and _stops_. `/build` refuses to run until it sees `SPEC-APPROVED.md`. `/review` runs `/polish` then `/verify` then posts a rocket emoji to your channel; a human sees the rocket, opens the PR, hits merge.
 
 ## Why this is a preset, not the core loop
 
 Base loopkit is `/spec` → implement → `/verify`, single-session, synchronous. That is the 49-skill floor and it will stay that way. Finn Loop is one arrangement on top:
 
-- It splits *spec-writing* and *building* across two sessions with a human ACK between them.
+- It splits _spec-writing_ and _building_ across two sessions with a human ACK between them.
 - It adds a merge-signalling step (`/review`) that talks to an outside channel (Linear, Slack, whatever).
 - It ships two integration hooks (Linear MCP, Slack webhook) — both **OFF by default**.
 

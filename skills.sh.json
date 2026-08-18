@@ -16,11 +16,7 @@
     {
       "title": "Debug",
       "description": "Reproduce, isolate, fix root cause — not symptom.",
-      "skills": [
-        "systematic-debugging",
-        "read-the-trace",
-        "bisect-regression"
-      ]
+      "skills": ["systematic-debugging", "read-the-trace", "bisect-regression"]
     },
     {
       "title": "Security",
@@ -36,11 +32,7 @@
     {
       "title": "Frontend",
       "description": "Design system, a11y, loading/empty/error states.",
-      "skills": [
-        "design-system",
-        "a11y-pass",
-        "loading-empty-error-states"
-      ]
+      "skills": ["design-system", "a11y-pass", "loading-empty-error-states"]
     },
     {
       "title": "Testing",
@@ -55,29 +47,17 @@
     {
       "title": "Refactor",
       "description": "Kill dead code. Simplify. Flatten nesting.",
-      "skills": [
-        "kill-dead-code",
-        "simplify",
-        "reduce-nesting"
-      ]
+      "skills": ["kill-dead-code", "simplify", "reduce-nesting"]
     },
     {
       "title": "Docs",
       "description": "Changelog, decision records, README audit.",
-      "skills": [
-        "changelog-from-diff",
-        "decision-record",
-        "readme-audit"
-      ]
+      "skills": ["changelog-from-diff", "decision-record", "readme-audit"]
     },
     {
       "title": "Data",
       "description": "SQL review, migration writer, schema diffs.",
-      "skills": [
-        "sql-review",
-        "migration-writer",
-        "schema-diff"
-      ]
+      "skills": ["sql-review", "migration-writer", "schema-diff"]
     },
     {
       "title": "Git / Ops",
@@ -92,10 +72,7 @@
     {
       "title": "Review",
       "description": "The 11 shortcuts agents take to fake 'done', and the gate before you claim.",
-      "skills": [
-        "adversarial-verify",
-        "verification-before-completion"
-      ]
+      "skills": ["adversarial-verify", "verification-before-completion"]
     }
   ]
 }

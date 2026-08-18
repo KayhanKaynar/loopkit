@@ -1,15 +1,15 @@
 #!/usr/bin/env node
-'use strict';
+"use strict";
 
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
 const args = process.argv.slice(2);
 const cmd = args[0];
-const FORCE = args.includes('--force');
-const DRY = args.includes('--dry-run');
-const HELP = args.includes('-h') || args.includes('--help');
-const VERSION = args.includes('--version');
+const FORCE = args.includes("--force");
+const DRY = args.includes("--dry-run");
+const HELP = args.includes("-h") || args.includes("--help");
+const VERSION = args.includes("--version");
 
 function help() {
   console.log(`claude-loopkit — drop-in .claude/ harness + 41 skills
@@ -34,7 +34,7 @@ Repo: https://github.com/Archive228/loopkit`);
 }
 
 if (VERSION) {
-  console.log(require('../package.json').version);
+  console.log(require("../package.json").version);
   process.exit(0);
 }
 
@@ -48,21 +48,21 @@ if (!cmd) {
   process.exit(1);
 }
 
-if (cmd !== 'init') {
+if (cmd !== "init") {
   console.error(`Unknown command: ${cmd}\n`);
   help();
   process.exit(1);
 }
 
-const PKG_ROOT = path.resolve(__dirname, '..');
+const PKG_ROOT = path.resolve(__dirname, "..");
 const CWD = process.cwd();
 
 const COPY = [
-  ['.claude', '.claude'],
-  ['skills', '.claude/skills'],
-  ['.mcp.json', '.mcp.json'],
-  ['MEMORY.md', 'MEMORY.md'],
-  ['run.sh', 'run.sh'],
+  [".claude", ".claude"],
+  ["skills", ".claude/skills"],
+  [".mcp.json", ".mcp.json"],
+  ["MEMORY.md", "MEMORY.md"],
+  ["run.sh", "run.sh"],
 ];
 
 let wrote = 0;
@@ -81,14 +81,14 @@ function walk(srcAbs, dstAbs) {
   const exists = fs.existsSync(dstAbs);
   if (exists && !FORCE) {
     skipped++;
-    plan.push(['skip', dstAbs]);
+    plan.push(["skip", dstAbs]);
     return;
   }
-  plan.push([exists ? 'overwrite' : 'write', dstAbs]);
+  plan.push([exists ? "overwrite" : "write", dstAbs]);
   if (!DRY) {
     fs.mkdirSync(path.dirname(dstAbs), { recursive: true });
     fs.copyFileSync(srcAbs, dstAbs);
-    if (srcAbs.endsWith('.sh')) fs.chmodSync(dstAbs, 0o755);
+    if (srcAbs.endsWith(".sh")) fs.chmodSync(dstAbs, 0o755);
   }
   wrote++;
 }
@@ -99,19 +99,27 @@ for (const [from, to] of COPY) {
   walk(src, path.join(CWD, to));
 }
 
-const rel = p => path.relative(CWD, p) || '.';
+const rel = (p) => path.relative(CWD, p) || ".";
 
 if (DRY) {
   for (const [verb, p] of plan) {
     console.log(`${verb.padEnd(9)} ${rel(p)}`);
   }
-  console.log(`\n[dry-run] ${wrote} would be written, ${skipped} would be skipped`);
+  console.log(
+    `\n[dry-run] ${wrote} would be written, ${skipped} would be skipped`,
+  );
   process.exit(0);
 }
 
 console.log(`claude-loopkit: init complete`);
-console.log(`  ${wrote} files written, ${skipped} skipped${skipped ? ' (use --force to overwrite)' : ''}`);
+console.log(
+  `  ${wrote} files written, ${skipped} skipped${skipped ? " (use --force to overwrite)" : ""}`,
+);
 console.log(`  installed into ${CWD}`);
 console.log();
-console.log(`Next: open Claude Code in this directory. Skills load on relevant triggers.`);
-console.log(`Docs and full 41-skill list: https://github.com/Archive228/loopkit`);
+console.log(
+  `Next: open Claude Code in this directory. Skills load on relevant triggers.`,
+);
+console.log(
+  `Docs and full 41-skill list: https://github.com/Archive228/loopkit`,
+);

@@ -40,11 +40,11 @@ Without this skill, the agent tends to <failure mode>. This skill enforces <the 
 
 ## Red flags — STOP
 
-| Thought | Reality |
-|---|---|
-| "I've done this before, I don't need the checklist" | Skills evolve; re-read the current SKILL.md. |
-| "This case is simple" | Simple cases become complex mid-task. |
-| "The user didn't ask for this rigor" | The user asked for a working result. Rigor is how you get one. |
+| Thought                                             | Reality                                                        |
+| --------------------------------------------------- | -------------------------------------------------------------- |
+| "I've done this before, I don't need the checklist" | Skills evolve; re-read the current SKILL.md.                   |
+| "This case is simple"                               | Simple cases become complex mid-task.                          |
+| "The user didn't ask for this rigor"                | The user asked for a working result. Rigor is how you get one. |
 
 ## Evidence
 
